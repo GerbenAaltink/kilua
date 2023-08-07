@@ -1,6 +1,7 @@
 require 'table'
 
--- TODO: make source conform LUA standards. It's ny furst Lua application
+-- TODO: make source conform LUA standards. 
+-- It's ny furst Lua application
 
 function getDateString()
     return os.date("%Y-%m-%d")
@@ -28,6 +29,9 @@ function Statistics:create()
 end
 
 function serializeObject(obj)
+    -- Self written object serializer
+    -- Since this serializer works with stored lengths of values 
+    -- it should be super safe.
     serialized = ""
     for k, v in pairs(obj) do
         serialized = serialized .. "{" .. string.len(k) .. ":" .. k .. ":" .. string.len(v) .. ":" .. v .. "}\n"
@@ -36,6 +40,10 @@ function serializeObject(obj)
 end
 
 function unserializeObject(obj, data)
+    -- Self written unserializer
+    -- The 'magic' numbers is for ignoring :{}
+    -- Since this unserializer works with stored lengths of values 
+    -- it should be super safe.
     debug = false
     while (string.len(data) > 0)
     do
@@ -92,6 +100,7 @@ function Statistics:read()
 
     io.input(file)
 
+    -- TODO: just read to end
     data = io.read(1024 * 1024)
 
     io.close()
@@ -123,16 +132,14 @@ function Statistics:test()
 end
 
 stats = Statistics:create()
+-- Load statistics of today
 stats:read()
 
 function generateStatusBarText()
     return stats:toString() .. " " .. _VERSION .. " " .. stats.fileName .. " " .. stats.lastSaved
 end
 
-function square(val1)
-    return val1 * val1
-end
-
+-- TODO: onEvent
 function event(name, param)
     if name == "keypress" then
         if param == 127 then
