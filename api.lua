@@ -1,5 +1,7 @@
 require 'table'
 
+-- TODO: make source conform LUA standards. It's ny furst Lua application
+
 function getDateString()
     return os.date("%Y-%m-%d")
 end
@@ -20,6 +22,7 @@ function Statistics:create()
     acnt.lastSaved = nil
     acnt.created = getDateTimeString()
     acnt.fileName = getDateString() .. "-statistics.txt"
+    -- TODO: remove hardcoded path to my home directory
     acnt.path = "/home/gerben/.config/kilo/statistics/" .. acnt.fileName
     return acnt
 end
@@ -109,7 +112,7 @@ end
 
 function Statistics:toString()
     return self.pressCount ..
-    " keys pressed. " .. self.mistakeCount .. " mistakes. " .. self.newLineCount .. " new lines added. "
+    " keys pressed. " .. self.mistakeCount .. " mistakes. " .. self.newLineCount .. " new lines added."
 end
 
 function Statistics:test()
@@ -121,9 +124,6 @@ end
 
 stats = Statistics:create()
 stats:read()
-
--- stats:test()
-
 
 function generateStatusBarText()
     return stats:toString() .. " " .. _VERSION .. " " .. stats.fileName .. " " .. stats.lastSaved
