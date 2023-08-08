@@ -1473,12 +1473,12 @@ void editorMoveNextLine()
 
 /* Process events arriving from the standard input, which is, the user
  * is typing stuff on the terminal. */
-#define KILO_QUIT_TIMES 1
+#define KILO_CONFIRM_TIMES 1
 void editorProcessKeypress(int fd)
 {
     /* When the file is modified, requires Ctrl-q to be pressed N times
      * before actually quitting. */
-    static int quit_times = KILO_QUIT_TIMES;
+    static int confirm_times = KILO_CONFIRM_TIMES;
 
     int c = editorReadKey(fd);
 
@@ -1496,10 +1496,10 @@ void editorProcessKeypress(int fd)
     case 'd':
         if (E.editMode == false)
         {
-            if (quit_times)
+            if (confirm_times)
             {
                 editorSetStatusMessage("Press again to delete current row.");
-                quit_times--;
+                confirm_times--;
                 return;
             }
 
@@ -1513,9 +1513,9 @@ void editorProcessKeypress(int fd)
         break;
     case 'y':
         if(E.editMode == false){
-            if(quit_times){
+            if(confirm_times){
                 editorSetStatusMessage("Press again to duplicate current row.");
-                quit_times--;
+                confirm_times--;
                 return;
             }
             int fileRow = editorGetCurrentRowNumber();
@@ -1542,12 +1542,12 @@ void editorProcessKeypress(int fd)
     case CTRL_Q: /* Ctrl-q */
         luaTriggerEvent("quit", CTRL_Q);
         /* Quit if the file was already saved. */
-        if (E.dirty && quit_times)
+        if (E.dirty && confirm_times)
         {
             editorSetStatusMessage("WARNING!!! File has unsaved changes. "
                                    "Press Ctrl-Q %d more times to quit.",
-                                   quit_times);
-            quit_times--;
+                                   confirm_times);
+            confirm_times--;
             return;
         }
         exit(0);
@@ -1611,7 +1611,7 @@ void editorProcessKeypress(int fd)
         break;
     }
 
-    quit_times = KILO_QUIT_TIMES; /* Reset it to the original value. */
+    confirm_times = KILO_CONFIRM_TIMES; /* Reset it to the original value. */
 }
 
 int editorFileWasModified(void)

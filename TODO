@@ -6,6 +6,22 @@ IMPORTANT
 * Duplicating a row should return as a line added into statistics 
 * Navigating trough words using CTRL key
 * Navigating trough lines using CTRL key (Navigate to line with same indent?)
+* Refactor KILO_QUIT_TIMES / quit_times everywhere to KILO_CONFIRM_TIMES 
+  and confirm_times since it's used for duplicating and deleting lines as well
+* Pasting content should not mess up statistics like key pressed count
+* Show current file in second bar at the bottom calculate how much chars
+  are available. Shorten with ,,,
+
+DONE
+* Implement Lua
+* Implemented per day statistics using Lua
+ * Amount of times key press if regular key
+ * Amount of times backspace press counting as mistake
+ * Amount of lines added 
+* View / edit modue changeable using ESC / i button
+* Delete line in view modue using double d key press 
+* Duplicate line in view mode using double y key press and navigate to new line
+* Replaced QUIT_TIMES to CONFIRM_TIMES
 
 MAYBE
 ===
