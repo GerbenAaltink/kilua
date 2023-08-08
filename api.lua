@@ -3,11 +3,11 @@ require 'table'
 -- TODO: make source conform LUA standards. 
 -- It's ny furst Lua application
 
-function getDateString()
+local function getDateString()
     return os.date("%Y-%m-%d")
 end
 
-function getDateTimeString()
+local function getDateTimeString()
     return os.date("%Y-%m-%d %H:%m:%S")
 end
 
@@ -28,18 +28,18 @@ function Statistics:create()
     return acnt
 end
 
-function serializeObject(obj)
+local function serializeObject(obj)
     -- Self written object serializer
     -- Since this serializer works with stored lengths of values 
     -- it should be super safe.
-    serialized = ""
+    local serialized = ""
     for k, v in pairs(obj) do
         serialized = serialized .. "{" .. string.len(k) .. ":" .. k .. ":" .. string.len(v) .. ":" .. v .. "}\n"
     end
     return serialized
 end
 
-function unserializeObject(obj, data)
+local function unserializeObject(obj, data)
     -- Self written unserializer
     -- The 'magic' numbers is for ignoring :{}
     -- Since this unserializer works with stored lengths of values 
@@ -49,29 +49,29 @@ function unserializeObject(obj, data)
     do
         if string.sub(data, 0, 1) == "{" then
             data = string.sub(data, 2)
-            endPos = string.find(data, ":") - 1
-            length = string.sub(data, 0, endPos)
+            local endPos = string.find(data, ":") - 1
+            local length = string.sub(data, 0, endPos)
             if debug then
                 print("KeyLength: " .. length)
             end
             data = string.sub(data, string.len(length) + 2)
-            name = string.sub(data, 0, length)
+            local name = string.sub(data, 0, length)
             data = string.sub(data, length + 2)
-            endPos = string.find(data, ":")
-            valueLength = string.sub(data, 0, endPos - 1)
+            local endPos = string.find(data, ":")
+            local valueLength = string.sub(data, 0, endPos - 1)
             if debug then
                 print("KeyName: " .. name)
             end
             if debug then
                 print("ValueLength: " .. valueLength)
             end
-            valueData = string.sub(data, string.len(valueLength) + 2, valueLength + string.len(valueLength) + 1)
+            local valueData = string.sub(data, string.len(valueLength) + 2, valueLength + string.len(valueLength) + 1)
             -- valueData = string.sub(data, 0, valueLength);
             if debug then
                 print("ValueData: " .. valueData)
             end
             data = string.sub(data, valueLength + string.len(valueLength) + 4)
-            vType = type(obj[name])
+            local vType = type(obj[name])
             if vType == "number" then
                 obj[name] = tonumber(valueData)
             else
@@ -83,8 +83,8 @@ end
 
 function Statistics:save()
     self.lastSaved = getDateTimeString()
-    data = serializeObject(self)
-    file = io.open(self.path, "w+")
+    local data = serializeObject(self)
+    local file = io.open(self.path, "w+")
     io.output(file)
     io.write(data)
     io.close()
@@ -104,16 +104,15 @@ function Statistics:ensure()
 end
 
 function Statistics:read()
-    file = io.open(self.path, "r")
+    local file = io.open(self.path, "r")
     if not file then
         return
     end
 
-
     io.input(file)
 
     -- TODO: just read to end
-    data = io.read(1024 * 1024)
+    local data = io.read(1024 * 1024)
 
     io.close()
     unserializeObject(self, data)
@@ -143,11 +142,11 @@ function Statistics:test()
     return self:toString()
 end
 
-stats = Statistics:create()
+local stats = Statistics:create()
 -- Load statistics of today and create if not exists yet using ensure 
 stats:ensure()
 
-function generateStatusBarText()
+local function generateStatusBarText()
     return stats:toString() .. " " .. _VERSION .. " " .. stats.fileName .. " " .. stats.lastSaved
 end
 
