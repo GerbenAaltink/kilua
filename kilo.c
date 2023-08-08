@@ -727,6 +727,21 @@ void editorInsertRow(int at, char *s, size_t len)
     E.dirty++;
 }
 
+void editorDuplicateRow(int rowNumber) {
+	erow * row = (rowNumber >= E.numrows) ? NULL : &E.row[rowNumber];
+	if(! row)
+	{
+		editorSetStatusMessage("Please select a row to dupplicate.");
+		return;
+	}
+	size_t size = strlen(row->chars);
+	editorInsertRow(rowNumber + 1, row->chars, size);
+	row = &E.row[rowNumber];
+	row->chars[size] = '\0';
+	row->size = size;
+	editorUpdateRow(row);
+}
+
 /* Free row's heap allocated stuff. */
 void editorFreeRow(erow *row)
 {
@@ -1330,6 +1345,7 @@ void editorFind(int fd)
 
 /* ========================= Editor events handling  ======================== */
 
+
 /* Handle cursor position change because arrow keys were pressed. */
 void editorMoveCursor(int key)
 {
@@ -1434,6 +1450,11 @@ void editorMoveCursor(int key)
     }
 }
 
+void editorMoveNextLine()
+{
+    editorMoveCursor(ARROW_DOWN);
+}
+
 /* Process events arriving from the standard input, which is, the user
  * is typing stuff on the terminal. */
 #define KILO_QUIT_TIMES 1
@@ -1470,6 +1491,23 @@ void editorProcessKeypress(int fd)
         }
         else
         {
+            luaTriggerEvent("keypress", c);
+            editorInsertChar(c);
+        }
+        break;
+    case 'y':
+        if(E.editMode == false){
+            if(quit_times){
+                editorSetStatusMessage("Press again to duplicate current row.");
+                quit_times--;
+                return;
+            }
+            int fileRow = E.rowoff + E.cy;
+            editorDuplicateRow(fileRow);
+            // Figure out if this is the right place or in editorDuplicateRow()
+            editorMoveNextLine();
+            editorSetStatusMessage("Row duplicated.");
+        }else{
             luaTriggerEvent("keypress", c);
             editorInsertChar(c);
         }
