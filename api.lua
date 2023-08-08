@@ -91,6 +91,18 @@ function Statistics:save()
     return data
 end
 
+function Statistics:ensure()
+    -- function that ensures the file is available
+    if self.lastSaved then
+        return true
+    end
+    self:read()
+    if not self.lastSaved then
+        self:save();
+    end
+    return true
+end
+
 function Statistics:read()
     file = io.open(self.path, "r")
     if not file then
@@ -132,8 +144,8 @@ function Statistics:test()
 end
 
 stats = Statistics:create()
--- Load statistics of today
-stats:read()
+-- Load statistics of today and create if not exists yet using ensure 
+stats:ensure()
 
 function generateStatusBarText()
     return stats:toString() .. " " .. _VERSION .. " " .. stats.fileName .. " " .. stats.lastSaved
