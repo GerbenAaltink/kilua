@@ -41,7 +41,7 @@ end
 
 local function unserializeObject(obj, data)
     -- Self written unserializer
-    -- The 'magic' numbers is for ignoring :{}
+    -- The 'magic' numbers are for ignoring :{}
     -- Since this unserializer works with stored lengths of values 
     -- it should be super safe.
     debug = false
@@ -55,7 +55,7 @@ local function unserializeObject(obj, data)
                 print("KeyLength: " .. length)
             end
             data = string.sub(data, string.len(length) + 2)
-            local name = string.sub(data, 0, length)
+            local name = string.sub(data, 0, tonumber(length))
             data = string.sub(data, length + 2)
             local endPos = string.find(data, ":")
             local valueLength = string.sub(data, 0, endPos - 1)
