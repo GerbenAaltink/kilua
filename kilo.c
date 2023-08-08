@@ -727,8 +727,23 @@ void editorInsertRow(int at, char *s, size_t len)
     E.dirty++;
 }
 
+
+/* Returns number of current row */
+int editorGetCurrentRowNumber() {
+    return E.rowoff + E.cy;
+}
+
+erow * editorGetRow(int rowNumber) {
+    return (rowNumber >= E.numrows) ? NULL : &E.row[rowNumber];
+}
+
+erow * editorGetCurrentRow() {
+    int currentRow = editorGetCurrentRowNumber();
+    return editorGetRow(currentRow);
+}
+
 void editorDuplicateRow(int rowNumber) {
-	erow * row = (rowNumber >= E.numrows) ? NULL : &E.row[rowNumber];
+	erow * row = editorGetRow(rowNumber);
 	if(! row)
 	{
 		editorSetStatusMessage("Please select a row to dupplicate.");
@@ -1058,6 +1073,7 @@ void abFree(struct abuf *ab)
 {
     free(ab->b);
 }
+
 
 /* This function writes the whole screen using VT100 escape characters
  * starting from the logical state of the editor in the global state 'E'. */
@@ -1502,7 +1518,7 @@ void editorProcessKeypress(int fd)
                 quit_times--;
                 return;
             }
-            int fileRow = E.rowoff + E.cy;
+            int fileRow = editorGetCurrentRowNumber();
             editorDuplicateRow(fileRow);
             // Figure out if this is the right place or in editorDuplicateRow()
             editorMoveNextLine();
