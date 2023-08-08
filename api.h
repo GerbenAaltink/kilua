@@ -10,7 +10,7 @@ void (*editorSetStatusMessageHook)(const char *fmt, ...);
 void bail(lua_State *L, char *msg)
 {
     fprintf(stderr, "\nFATAL ERROR:\n  %s: %s\n\n",
-            msg, lua_tostring(L, -2));
+            msg, lua_tostring(L, -1));
     exit(2);
 }
 
