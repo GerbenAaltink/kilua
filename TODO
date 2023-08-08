@@ -4,6 +4,8 @@ IMPORTANT
 * Testing and stability to reach "usable" level.
 * Duplicating a row should trigger to Lua 
 * Duplicating a row should return as a line added into statistics 
+* Navigating trough words using CTRL key
+* Navigating trough lines using CTRL key (Navigate to line with same indent?)
 
 MAYBE
 ===
