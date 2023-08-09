@@ -1485,8 +1485,11 @@ void editorProcessKeypress(int fd)
     switch (c)
     {
     case ENTER: /* Enter */
-        luaTriggerEvent("newLine", ENTER);
-        editorInsertNewline();
+        if(E.editMode == true)
+        {
+            luaTriggerEvent("keypress", ENTER);
+            editorInsertNewline();
+        }
         break;
     case CTRL_C: /* Ctrl-c */
         luaTriggerEvent("copy", CTRL_C);
@@ -1563,6 +1566,7 @@ void editorProcessKeypress(int fd)
     case BACKSPACE: /* Backspace */
     case CTRL_H:    /* Ctrl-h */
     case DEL_KEY:
+        luaTriggerEvent("keypress", c);
         editorDelChar();
         break;
     case PAGE_UP:
