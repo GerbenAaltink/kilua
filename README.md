@@ -1,6 +1,11 @@
 Kilo
 ===
 
+## Changes by me (Gerben Aaltink):
+This is not my project. I only made some modifications. I've implemented the Lua scripting language so it's possible to write plugins for this tiny editor. I wrote an statistics plugin. It contains how much keys i've pressed for example.
+
+## Original README
+
 Kilo is a small text editor in less than 1K lines of code (counted with cloc).
 
 A screencast is available here: https://asciinema.org/a/90r2i9bq8po03nazhqtsifksb
